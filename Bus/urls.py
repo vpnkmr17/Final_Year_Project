@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Client.views import create_profile,access_data,login,ticket_booking
+from Client.views import (
+    create_profile,access_data,
+    login,ticket_booking,
+    user_detail,
+    ticket_detail
+    )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/create/',create_profile),
-    path('api/data/',access_data),
     path('api/login/',login),
-    path('api/ticket/',ticket_booking)
+    path('api/user/',user_detail),
+    path('api/ticket/',ticket_booking),
+    path('api/ticket_detail/',ticket_detail)
 ]
