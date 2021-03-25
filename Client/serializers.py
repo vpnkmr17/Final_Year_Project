@@ -22,10 +22,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model=Ticket
-        fields=['source','destination','bus_no','user','Payment']
+        fields=['id','source','destination','bus_no','user']
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Payment
-        fields=['id','price','mode']
+        fields=['id','ticket','price','mode']
 
   

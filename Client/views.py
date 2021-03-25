@@ -51,15 +51,15 @@ def ticket_booking(requests):
     data=requests.data or None
     print("before data is ",data)
     data['user']=requests.user.id
-    pay_seri=PaymentSerializer(data=data)
-    if pay_seri.is_valid():
-        pay_data=pay_seri.save()
-        print("pay_data is ",pay_data.id)
-        data['Payment']=pay_data.id
-        tick_seri=TicketSerializer(data=data)
-        if tick_seri.is_valid():
+    tick_seri=TicketSerializer(data=data)
+    if tick_seri.is_valid():
+        tick_data=tick_seri.save()
+        print("pay_data is ",tick_data.id)
+        data['ticket']=tick_data.id
+        pay_seri=PaymentSerializer(data=data)
+        if pay_seri.is_valid():
             print("idhr aa rha hai kya")
-            tick_seri.save()
+            pay_seri.save()
             return Response({"ticket":"Booked Successfully"},status=201)
         print("ticket mei kya error hai ",tick_seri.errors)
     return Response({'Error':"Please send data in right format"},status=401)

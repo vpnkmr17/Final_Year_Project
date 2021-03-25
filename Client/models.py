@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from django.utils import timezone
 
 class MyAccountManager(BaseUserManager):
     def create_user(self,email,username,phone,is_active=True,address=None,date_of_birth=None,password=None):
@@ -41,8 +42,8 @@ class Profile(AbstractBaseUser):
     username=models.CharField(max_length=30,unique=True)
     phone=models.CharField(max_length=15)
     address=models.CharField(max_length=300,blank=True,null=True)
-    date_of_birth=models.DateField(blank=True,null=True)
-    data_joined=models.DateTimeField(verbose_name="date joined",auto_now_add=True)
+    date_of_birth=models.DateField(blank=True,null=True,default=timezone.now)
+    data_joined=models.DateTimeField(verbose_name="date joined",default=timezone.now)
     last_login=models.DateTimeField(verbose_name='last login',auto_now=True)
     is_admin=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
@@ -66,22 +67,22 @@ def create_auth_token(sender,instance=None,created=False,**kwargs):
         Token.objects.create(user=instance)
 
 
-class Payment(models.Model):
-    price=models.IntegerField()
-    mode=models.CharField(max_length=250)
-    date=models.DateTimeField(auto_now_add=True)
-
 
 class Ticket(models.Model):
     user=models.ForeignKey(Profile,null=True,blank=True,on_delete=models.CASCADE,related_name="tick_user")
-    Payment=models.OneToOneField(Payment,null=True,blank=True,on_delete=models.CASCADE,related_name="payment")
     source=models.CharField(max_length=250)
     destination=models.CharField(max_length=250)
     bus_no=models.CharField(max_length=250)
-    date=models.DateTimeField(auto_now_add=True)
+    date=models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return str(self.source)+"---"+str(self.destination)
+
+class Payment(models.Model):
+    ticket=models.OneToOneField(Ticket,null=True,blank=True,on_delete=models.CASCADE,related_name="ticket")
+    price=models.IntegerField()
+    mode=models.CharField(max_length=250)
+    date=models.DateTimeField(default=timezone.now)
 
 
 
